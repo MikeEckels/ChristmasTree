@@ -16,17 +16,6 @@ void setup() {
 }
 
 void loop() {
-	/*int bits[] = { 15,16,17,18};
-	WriteBitsOn(bits, ARRAY_SIZE(bits));*/
-
-	for (int i = 0; i < 3; i++)
-	{
-		for (int j = 0; j < 8; j++)
-		{
-			bitSet(SHFT_REG_DATA[i], j);
-
-			WriteShiftData();
-			delay(500);
-		}
-	}
+	int bits[] = { 15,16,17,18};
+	WriteBitsOn(bits, ARRAY_SIZE(bits));
 }
