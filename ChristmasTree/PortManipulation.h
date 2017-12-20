@@ -60,7 +60,7 @@ void WriteShiftData()
 }
 
 // bits[] is an array containing the zero-indexed bits that should be set
-void WriteBitsOn(int Bits[], int Len)
+void WriteBitsOn(int8_t Bits[], int Len)
 {
 	for (int i = 0; i < Len; i++)
 	{
@@ -71,7 +71,7 @@ void WriteBitsOn(int Bits[], int Len)
 }
 
 // bits[] is an array containing the zero-indexed bits that should be cleared
-void WriteBitsOff(int Bits[], int Len)
+void WriteBitsOff(int8_t Bits[], int Len)
 {
 	for (int i = 0; i < Len; i++)
 	{
@@ -83,12 +83,12 @@ void WriteBitsOff(int Bits[], int Len)
 
 void ClearAllBits()
 {
-	int AllBits[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 };
+	int8_t AllBits[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 };
 	WriteBitsOff(AllBits, 24);
 }
 
 void SetAllBits()
 {
-	int AllBits[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 };
+	int8_t AllBits[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 };
 	WriteBitsOn(AllBits, 24);
 }
