@@ -1,7 +1,6 @@
 #pragma once
 #include "LedArrays.h"
 #include "PortManipulation.h"
-#include "3rdParty\Array.h"
 
 /**The first 15 bits control led color per-column, three bits per led (b,g,r). The current column color
 is selected to be the color(s) that are set to zero . Ground line bits are directly after
