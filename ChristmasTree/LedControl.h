@@ -64,63 +64,35 @@ void Tree::shiftOut()
 	{
 		int8_t colorState = static_cast<int8_t>(ledClrStates[led]);
 
-		Array<int8_t, Leds::BITS_PER_LED> inversePins;
-		bool subsequentReduce = false; // as soon as first color has pins written, set true to start reducing for additional colors
-
-		/*The following is a 'reduce' algorithm. For each additional color
-		state an LED is in, one less pin must be turned off. The only pins
-		that must be written to 0 are the pins that each color array has in common.*/
+		int8_t tmpCtl[1] = { 0 };
+		int8_t tmpGrd[1] = { 0 };
 
 		if (colorState & EColor::BLUE)
 		{
-			subsequentReduce = true;
-			inversePins = Array<int8_t, Leds::BITS_PER_LED>(Leds::BLEDS[led]);
+			tmpCtl[0] = Leds::BLEDS[led].controlPin;
+			tmpGrd[0] = Leds::BLEDS[led].groundPin;
+
+			WriteBitsOff(tmpCtl, ARRAY_SIZE(tmpCtl));
+			WriteBitsOn(tmpGrd, ARRAY_SIZE(tmpGrd));
 		}
 
 		if (colorState & EColor::GREEN)
 		{
-			if (subsequentReduce)
-			{
-				Array<int8_t, Leds::BITS_PER_LED> tmpInvPins;
-				for (int i = 0; i < inversePins.size(); i++)
-				{
-					for (int j = 0; j < Leds::BITS_PER_LED; j++)
-					{
-						// take the pins that are common between colors
-						if (inversePins[i] == Leds::GLEDS[led][j])
-							tmpInvPins.push_back(inversePins[i]);
-					}
-				}
-				inversePins = tmpInvPins;
-			}
-			else {
-				inversePins = Array<int8_t, Leds::BITS_PER_LED>(Leds::GLEDS[led]);
-			}
-			subsequentReduce = true;
+			tmpCtl[0] = Leds::GLEDS[led].controlPin;
+			tmpGrd[0] = Leds::GLEDS[led].groundPin;
+
+			WriteBitsOff(tmpCtl, ARRAY_SIZE(tmpCtl));
+			WriteBitsOn(tmpGrd, ARRAY_SIZE(tmpGrd));
 		}
 
 		if (colorState & EColor::RED)
 		{
-			if (subsequentReduce)
-			{
-				Array<int8_t, Leds::BITS_PER_LED> tmpInvPins;
-				for (int i = 0; i < inversePins.size(); i++)
-				{
-					for (int j = 0; j < Leds::BITS_PER_LED; j++)
-					{
-						// take the pins that are common between colors
-						if (inversePins[i] == Leds::RLEDS[led][j])
-							tmpInvPins.push_back(inversePins[i]);
-					}
-				}
-				inversePins = tmpInvPins;
-			}
-			else {
-				inversePins = Array<int8_t, Leds::BITS_PER_LED>(Leds::RLEDS[led]);
-			}
-			subsequentReduce = true;
-		}
+			tmpCtl[0] = Leds::RLEDS[led].controlPin;
+			tmpGrd[0] = Leds::RLEDS[led].groundPin;
 
-		WriteBitsOn(inversePins.data(), inversePins.size());
+			WriteBitsOff(tmpCtl, ARRAY_SIZE(tmpCtl));
+			WriteBitsOn(tmpGrd, ARRAY_SIZE(tmpGrd));
+		}
+		WriteShiftData();
 	}
 }

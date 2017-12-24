@@ -82,15 +82,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="3rdParty\Array.h" />
-    <ClInclude Include="3rdParty\Array\ArrayDefinitions.h" />
     <ClInclude Include="LedArrays.h" />
     <ClInclude Include="LedControl.h" />
     <ClInclude Include="PortManipulation.h" />
     <ClInclude Include="__vm\.ChristmasTree.vsarduino.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="3rdParty\Array\Array.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

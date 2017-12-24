@@ -67,7 +67,6 @@ void WriteBitsOn(int8_t Bits[], int Len)
 		int ByteIndex = Bits[i] / 8;
 		bitSet(SHFT_REG_DATA[ByteIndex], Bits[i] % 8);
 	}
-	WriteShiftData();
 }
 
 // bits[] is an array containing the zero-indexed bits that should be cleared
@@ -78,7 +77,6 @@ void WriteBitsOff(int8_t Bits[], int Len)
 		int ByteIndex = Bits[i] / 8;
 		bitClear(SHFT_REG_DATA[ByteIndex], Bits[i] % 8);
 	}
-	WriteShiftData();
 }
 
 void ClearAllBits()
