@@ -7,13 +7,19 @@
 
 Tree tree;
 void setup() {
-	ClearAllBits();
-	int8_t ctlPins[] = { 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14};
-	WriteBitsOn(ctlPins, ARRAY_SIZE(ctlPins));
-	//tree.enableLed(0, EColor::BLUE);
-	tree.enableLed(2, EColor::RED);
-	tree.enableLed(10, EColor::BLUE);
-	tree.shiftOut();
+	tree.reset();
+
+	tree.enableLed(0, EColor::BLUE);
+	for (int i = 0; i < 23; i++)
+	{
+		tree.enableLed(i, EColor::BLUE);
+		tree.shiftOut();
+		delay(500);
+
+		tree.disableLed(i, EColor::BLUE);
+		tree.shiftOut();
+		tree.reset();
+	}
 }
 
 void loop() {
