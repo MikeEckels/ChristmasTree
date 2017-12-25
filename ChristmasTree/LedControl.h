@@ -258,43 +258,52 @@ bool Tree::disableCol(const uint8_t col, EColor color)
 
 void Tree::shiftOut()
 {
-	// TODO: Must unset bits if the color is not selected.
-	// Cannot simply do an else because pins may overlap, must
-	// keep internal state and only reset if state has changed.
-	// for now just call reset() manually
-
+	/* unset any leds that may have been turned off. We must do this first
+	since some leds have overlapping pins*/
 	for (uint16_t led = 0; led < Leds::LED_ARR_SIZE; led++)
 	{
 		int8_t colorState = static_cast<int8_t>(ledClrStates[led]);
 
-		int8_t tmpCtl[1] = { 0 };
-		int8_t tmpGrd[1] = { 0 };
+		if (!(colorState & EColor::BLUE))
+		{
+			WriteBitOn(Leds::BLEDS[led].controlPin);
+			WriteBitOff(Leds::BLEDS[led].groundPin);
+		}
+
+		if (!(colorState & EColor::GREEN))
+		{
+			WriteBitOn(Leds::GLEDS[led].controlPin);
+			WriteBitOff(Leds::GLEDS[led].groundPin);
+		}
+
+		if (!(colorState & EColor::RED))
+		{
+			WriteBitOn(Leds::RLEDS[led].controlPin);
+			WriteBitOff(Leds::RLEDS[led].groundPin);
+		}
+	}
+
+	// turn leds on
+	for (uint16_t led = 0; led < Leds::LED_ARR_SIZE; led++)
+	{
+		int8_t colorState = static_cast<int8_t>(ledClrStates[led]);
 
 		if (colorState & EColor::BLUE)
 		{
-			tmpCtl[0] = Leds::BLEDS[led].controlPin;
-			tmpGrd[0] = Leds::BLEDS[led].groundPin;
-
-			WriteBitsOff(tmpCtl, ARRAY_SIZE(tmpCtl));
-			WriteBitsOn(tmpGrd, ARRAY_SIZE(tmpGrd));
+			WriteBitOff(Leds::BLEDS[led].controlPin);
+			WriteBitOn(Leds::BLEDS[led].groundPin);
 		} 
 
 		if (colorState & EColor::GREEN)
 		{
-			tmpCtl[0] = Leds::GLEDS[led].controlPin;
-			tmpGrd[0] = Leds::GLEDS[led].groundPin;
-
-			WriteBitsOff(tmpCtl, ARRAY_SIZE(tmpCtl));
-			WriteBitsOn(tmpGrd, ARRAY_SIZE(tmpGrd));
+			WriteBitOff(Leds::GLEDS[led].controlPin);
+			WriteBitOn(Leds::GLEDS[led].groundPin);
 		}
 
 		if (colorState & EColor::RED)
 		{
-			tmpCtl[0] = Leds::RLEDS[led].controlPin;
-			tmpGrd[0] = Leds::RLEDS[led].groundPin;
-
-			WriteBitsOff(tmpCtl, ARRAY_SIZE(tmpCtl));
-			WriteBitsOn(tmpGrd, ARRAY_SIZE(tmpGrd));
+			WriteBitOff(Leds::RLEDS[led].controlPin);
+			WriteBitOn(Leds::RLEDS[led].groundPin);
 		}
 		WriteShiftData();
 	}

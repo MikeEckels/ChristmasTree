@@ -64,7 +64,7 @@ void WriteBitsOn(int8_t Bits[], int Len)
 {
 	for (int i = 0; i < Len; i++)
 	{
-		int ByteIndex = Bits[i] / 8;
+		int ByteIndex = Bits[i] >> 3; // divide by 8
 		bitSet(SHFT_REG_DATA[ByteIndex], Bits[i] % 8);
 	}
 }
@@ -74,9 +74,23 @@ void WriteBitsOff(int8_t Bits[], int Len)
 {
 	for (int i = 0; i < Len; i++)
 	{
-		int ByteIndex = Bits[i] / 8;
+		int ByteIndex = Bits[i] >> 3; // divide by 8
 		bitClear(SHFT_REG_DATA[ByteIndex], Bits[i] % 8);
 	}
+}
+
+// specialization of above to avoid having to make temp arrays for single  bits
+void WriteBitOn(int8_t Bit)
+{
+	int ByteIndex = Bit >> 3; // divide by 8
+	bitSet(SHFT_REG_DATA[ByteIndex], Bit % 8);
+}
+
+// see WriteBitOn
+void WriteBitOff(int8_t Bit)
+{
+	int ByteIndex = Bit >> 3;
+	bitClear(SHFT_REG_DATA[ByteIndex], Bit % 8);
 }
 
 void ClearAllBits()

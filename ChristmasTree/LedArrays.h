@@ -68,7 +68,7 @@ namespace Leds {
 	};
 
 	CtlGroup RLEDS[LED_ARR_SIZE] = {
-		CtlGroup(2,12),
+		CtlGroup(2,15),
 		CtlGroup(2,16),
 		CtlGroup(5,16),
 		CtlGroup(8,16),

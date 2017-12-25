@@ -8,20 +8,23 @@
 Tree tree;
 void setup() {
 	tree.reset();
-
-	tree.enableLed(0, EColor::BLUE);
-	for (int i = 0; i < 23; i++)
-	{
-		tree.enableLed(i, EColor::BLUE);
-		tree.shiftOut();
-		delay(500);
-
-		tree.disableLed(i, EColor::BLUE);
-		tree.shiftOut();
-		tree.reset();
-	}
 }
 
 void loop() {
-	
+	//Leds::LED_ARR_SIZE
+
+	for(int i = 0; i < 3; i++)
+	{
+		EColor color = (EColor)(1 << i);
+
+		for (int j = 0; j < 7; j++)
+		{
+			tree.enableRow(j, color);
+			tree.shiftOut();
+			delay(100);
+
+			tree.disableRow(j, color);
+			tree.shiftOut();
+		}
+	}
 }
