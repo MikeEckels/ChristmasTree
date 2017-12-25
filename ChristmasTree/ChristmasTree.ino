@@ -17,7 +17,7 @@ void loop() {
 	{
 		EColor color = (EColor)(1 << i);
 
-		for (int j = 0; j < 7; j++)
+		for (int j = 0; j < 5; j++)
 		{
 			tree.enableRow(j, color);
 			tree.shiftOut();

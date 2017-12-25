@@ -172,8 +172,9 @@ bool Tree::disableRow(const uint8_t row, EColor color)
 
 bool Tree::enableCol(const uint8_t col, EColor color)
 {
-	if (col < 0 || col > 4)
+	if (col < 0 || col > 5)
 		return false;
+
 	switch(col)
 	{ 
 	case 0:
@@ -215,8 +216,9 @@ bool Tree::enableCol(const uint8_t col, EColor color)
 
 bool Tree::disableCol(const uint8_t col, EColor color)
 {
-	if (col < 0 || col > 4)
+	if (col < 0 || col > 5)
 		return false;
+
 	switch (col)
 	{
 	case 0:
