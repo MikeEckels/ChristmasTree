@@ -260,30 +260,9 @@ bool Tree::disableCol(const uint8_t col, EColor color)
 
 void Tree::shiftOut()
 {
-	/* unset any leds that may have been turned off. We must do this first
-	since some leds have overlapping pins*/
-	for (uint16_t led = 0; led < Leds::LED_ARR_SIZE; led++)
-	{
-		int8_t colorState = static_cast<int8_t>(ledClrStates[led]);
-
-		if (!(colorState & EColor::BLUE))
-		{
-			WriteBitOn(Leds::BLEDS[led].controlPin);
-			WriteBitOff(Leds::BLEDS[led].groundPin);
-		}
-
-		if (!(colorState & EColor::GREEN))
-		{
-			WriteBitOn(Leds::GLEDS[led].controlPin);
-			WriteBitOff(Leds::GLEDS[led].groundPin);
-		}
-
-		if (!(colorState & EColor::RED))
-		{
-			WriteBitOn(Leds::RLEDS[led].controlPin);
-			WriteBitOff(Leds::RLEDS[led].groundPin);
-		}
-	}
+	ClearAllBits();
+	int8_t ctlPins[] = { 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14 };
+	WriteBitsOn(ctlPins, ARRAY_SIZE(ctlPins));
 
 	// turn leds on
 	for (uint16_t led = 0; led < Leds::LED_ARR_SIZE; led++)

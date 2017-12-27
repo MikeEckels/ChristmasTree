@@ -12,18 +12,16 @@ void setup() {
 
 void loop() {
 	//Leds::LED_ARR_SIZE
-
 	for(int i = 0; i < 3; i++)
 	{
 		EColor color = (EColor)(1 << i);
-
-		for (int j = 0; j < 5; j++)
+		for (int j = 0; j < Leds::LED_ARR_SIZE; j++)
 		{
-			tree.enableRow(j, color);
+			tree.enableLed(j, color);
 			tree.shiftOut();
 			delay(100);
 
-			tree.disableRow(j, color);
+			tree.disableLed(j, color);
 			tree.shiftOut();
 		}
 	}
