@@ -2,6 +2,7 @@
 /**This class handles all the manual port manipulation logic. Manual port manip was chosen due to it's speed. Some of 
 the pin mappings are specific to this christmas tree project, some parts are generic**/
 
+#define USE_TEENSY_3_2
 #define ARRAY_SIZE(array) \
     (sizeof(array) / sizeof(array[0]))
 
@@ -12,23 +13,28 @@ int Data_Pin = 8;     //PB0
 
 const int SHFT_REG_COUNT = 3; // how many shift registers we have
 
+#ifndef USE_TEENSY_3_2
+	struct bits {
+		uint8_t b0 : 1;
+		uint8_t b1 : 1;
+		uint8_t b2 : 1;
+		uint8_t b3 : 1;
+		uint8_t b4 : 1;
+		uint8_t b5 : 1;
+		uint8_t b6 : 1;
+		uint8_t b7 : 1;
+	} __attribute__((__packed__));
+	#define SBIT(port,pin) ((*(volatile struct bits*)&port).b##pin)
+
+	#define Data_Bit SBIT(PORTB, 0)
+	#define Clock_Bit SBIT(PORTB, 1)
+	#define Latch_Bit SBIT(PORTB, 2)
+#endif
+
+
 // Shared state of all the leds
 int SHFT_REG_DATA[SHFT_REG_COUNT] = { 0 };
-struct bits {
-	uint8_t b0 : 1;
-	uint8_t b1 : 1;
-	uint8_t b2 : 1;
-	uint8_t b3 : 1;
-	uint8_t b4 : 1;
-	uint8_t b5 : 1;
-	uint8_t b6 : 1;
-	uint8_t b7 : 1;
-} __attribute__((__packed__));
-#define SBIT(port,pin) ((*(volatile struct bits*)&port).b##pin)
 
-#define Data_Bit SBIT(PORTB, 0)
-#define Clock_Bit SBIT(PORTB, 1)
-#define Latch_Bit SBIT(PORTB, 2)
 
 void initPortManip()
 {
@@ -42,21 +48,36 @@ void ShiftOutPORTMANIP(int val)
 {
 	for (int i = 0; i < 8; i++)
 	{
-		Data_Bit = !!(val & (1 << (7 - i)));
-		Clock_Bit = 1;
-		Clock_Bit = 0;
+		#ifdef USE_TEENSY_3_2
+			digitalWriteFast(Data_Pin, !!(val & (1 << (7 - i))));
+			digitalWriteFast(Clock_Pin, HIGH);
+			digitalWriteFast(Clock_Pin, LOW);
+		#else
+			Data_Bit = !!(val & (1 << (7 - i)));
+			Clock_Bit = 1;
+			Clock_Bit = 0;
+		#endif 
 	}
 }
 
 // Write register buffer to hardware
 void WriteShiftData()
-{
-	Latch_Bit = 0;
-	for (int i = SHFT_REG_COUNT - 1; i >= 0; i--)
-	{
-		ShiftOutPORTMANIP(SHFT_REG_DATA[i]);
-	}
-	Latch_Bit = 1;
+{	
+	#ifdef USE_TEENSY_3_2
+		digitalWriteFast(Latch_Pin, LOW);
+		for (int i = SHFT_REG_COUNT - 1; i >= 0; i--)
+		{
+			ShiftOutPORTMANIP(SHFT_REG_DATA[i]);
+		}
+		digitalWriteFast(Latch_Pin, HIGH);
+	#else
+		Latch_Bit = 0;
+		for (int i = SHFT_REG_COUNT - 1; i >= 0; i--)
+		{
+			ShiftOutPORTMANIP(SHFT_REG_DATA[i]);
+		}
+		Latch_Bit = 1;
+	#endif
 }
 
 // bits[] is an array containing the zero-indexed bits that should be set
